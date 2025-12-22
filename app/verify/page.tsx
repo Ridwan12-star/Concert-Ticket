@@ -1,5 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 
 import { FormEvent, useEffect, useState } from "react";
