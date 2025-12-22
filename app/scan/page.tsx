@@ -101,7 +101,12 @@ export default function ScanPage() {
           }}
         >
           <Scanner
-            onDecode={handleDecode}
+            onScan={(results: any) => {
+              const text = results?.[0]?.rawValue ?? results?.[0]?.text ?? "";
+              if (typeof text === "string" && text.trim()) {
+                handleDecode(text.trim());
+              }
+            }}
             onError={(err) => {
               console.error(err);
               setError("Camera error. Check permissions and try again.");
@@ -109,9 +114,9 @@ export default function ScanPage() {
             constraints={{
               facingMode: "environment",
             }}
-            containerStyle={{
-              width: "100%",
-              aspectRatio: "4 / 3",
+            styles={{
+              container: { width: "100%", aspectRatio: "4 / 3" },
+              video: { width: "100%", objectFit: "cover" },
             }}
           />
         </div>
