@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState, useRef } from "react";
+import { FormEvent, useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 type VerifyStatus = "idle" | "checking" | "valid" | "used" | "invalid" | "error";
@@ -12,7 +12,7 @@ interface TicketInfo {
   scanHistory?: Array<{ scannedAt: string; action: string }>;
 }
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const params = useSearchParams();
   const [ticketId, setTicketId] = useState("");
   const [status, setStatus] = useState<VerifyStatus>("idle");
@@ -263,5 +263,47 @@ export default function VerifyPage() {
         )}
       </div>
     </main>
+  );
+}
+
+// Loading fallback component
+function VerifyPageLoading() {
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+        background:
+          "radial-gradient(circle at 10% 20%, #1e0b36 0%, #050816 40%, #190034 80%)",
+        color: "#fff",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "480px",
+          background: "rgba(15,23,42,0.82)",
+          borderRadius: 18,
+          padding: "24px",
+          boxShadow: "0 20px 50px rgba(0,0,0,0.65)",
+          border: "1px solid rgba(148,163,184,0.35)",
+          textAlign: "center",
+        }}
+      >
+        <p style={{ opacity: 0.8 }}>Loading verification page...</p>
+      </div>
+    </main>
+  );
+}
+
+// Main export with Suspense boundary
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<VerifyPageLoading />}>
+      <VerifyPageContent />
+    </Suspense>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import { useParams, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import QRCode from "react-qr-code";
 
-export default function TicketPage() {
+function TicketPageContent() {
   const params = useParams<{ ticketId: string }>();
   const searchParams = useSearchParams();
 
@@ -130,6 +131,37 @@ export default function TicketPage() {
         </p>
       </main>
     </div>
+  );
+}
+
+// Loading fallback component
+function TicketPageLoading() {
+  return (
+    <div 
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "clamp(16px, 4vw, 24px)",
+        background:
+          "radial-gradient(circle at 10% 20%, #1e0b36 0%, #050816 40%, #190034 80%)",
+        color: "#fff",
+      }}
+    >
+      <div style={{ textAlign: "center", opacity: 0.8 }}>
+        <p>Loading ticket...</p>
+      </div>
+    </div>
+  );
+}
+
+// Main export with Suspense boundary
+export default function TicketPage() {
+  return (
+    <Suspense fallback={<TicketPageLoading />}>
+      <TicketPageContent />
+    </Suspense>
   );
 }
 
